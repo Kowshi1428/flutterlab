@@ -1,0 +1,75 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const CounterApp());
+}
+
+class CounterApp extends StatelessWidget {
+  const CounterApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.indigo),
+      home: const CounterScreen(),
+    );
+  }
+}
+
+class CounterScreen extends StatefulWidget {
+  const CounterScreen({super.key});
+
+  @override
+  State<CounterScreen> createState() => _CounterScreenState();
+}
+
+class _CounterScreenState extends State<CounterScreen> {
+  // 1. Define the variable to hold the number
+  int _counter = 0;
+
+  // 2. Function to increase the number
+  void _incrementCounter() {
+    setState(() {
+      // This tells Flutter that something changed!
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Floating Counter'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'You have pushed the button this many times:',
+              style: TextStyle(fontSize: 16),
+            ),
+            // 3. Display the current number
+            Text(
+              '$_counter',
+              style: const TextStyle(
+                fontSize: 80,
+                fontWeight: FontWeight.bold,
+                color: Colors.indigo,
+              ),
+            ),
+          ],
+        ),
+      ),
+      // 4. The Floating Action Button (FAB)
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter, // Call the function when clicked
+        tooltip: 'Increment',
+        backgroundColor: Colors.indigo,
+        child: const Icon(Icons.add, color: Colors.white, size: 30),
+      ),
+    );
+  }
+}
