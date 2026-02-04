@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+
+
+void main() => runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: SMS()));
+
+
+class SMS extends StatefulWidget {
+
+const SMS({super.key});
+
+@override
+
+State<SMS> createState() => _SMSState();
+
+}
+
+
+class _SMSState extends State<SMS> {
+
+final nameCtrl = TextEditingController(), rollCtrl = TextEditingController();
+
+final List<Map<String, String>> data = [];
+
+int? editIdx; // Tracks if we are editing a student
+
+
+void save() => setState(() {
+
+if (nameCtrl.text.isEmpty) return;
+
+if (editIdx == null) {
+
+data.add({'n': nameCtrl.text, 'r': rollCtrl.text});
+
+} else {
+
+data[editIdx!] = {'n': nameCtrl.text, 'r': rollCtrl.text};
+
+editIdx = null; // Reset edit state
+
+}
+
+nameCtrl.clear(); rollCtrl.clear();
+
+FocusScope.of(context).unfocus(); // Close keyboard
+
+});
+
+
+void startEdit(int i) {
+
+setState(() {
+
+editIdx = i;
+
+nameCtrl.text = data[i]['n']!;
+
+rollCtrl.text = data[i]['r']!;
+
+});
+
+}
+
+
+@override
+
+Widget build(BuildContext context) {
+
+return Scaffold(
+
+appBar: AppBar(title: const Text("Student Management"), backgroundColor: Colors.blue.shade100),
+
+body: Padding(
+
+padding: const EdgeInsets.all(12),
+
+child: Column(
+
+children: [
+
+TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: "Name")),
+
+TextField(controller: rollCtrl, decoration: const InputDecoration(labelText: "Roll No")),
+
+const SizedBox(height: 10),
+
+ElevatedButton(
+
+onPressed: save,
+
+style: ElevatedButton.styleFrom(backgroundColor: editIdx == null ? null : Colors.orange.shade200),
+
+child: Text(editIdx == null ? "Add Student" : "Update Student")
+
+),
+
+const Divider(),
+
+Expanded(
+
+child: data.isEmpty
+
+? const Center(child: Text("Empty List"))
+
+: ListView.builder(
+
+itemCount: data.length,
+
+itemBuilder: (ctx, i) => ListTile(
+
+title: Text(data[i]['n']!),
+
+subtitle: Text("Roll: ${data[i]['r']}"),
+
+trailing: Row(
+
+mainAxisSize: MainAxisSize.min,
+
+children: [
+
+IconButton(icon: const Icon(Icons.edit, color: Colors.blue), onPressed: () => startEdit(i)),
+
+IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: () => setState(() => data.removeAt(i))),
+
+],
+
+),
+
+),
+
+),
+
+),
+
+],
+
+),
+
+),
+
+);
+
+}
